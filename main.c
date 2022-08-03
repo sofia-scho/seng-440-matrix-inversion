@@ -9,11 +9,11 @@
 int well_conditioned_matrix[MATRIX_SIZE][MATRIX_SIZE] = 
 {
     {1, 2, 1, 1, 2, 1},
-    {5, 1, 7, 1, 1, 3},
+    {5, 2, 7, 1, 1, 3},
     {7, 1, 1, 4, 1, 2},
-    {1, 1, 5, 2, 1, 7},
-    {1, 2, 5, 1, 2, 1},
-    {1, 1, 1, 1, 1, 2}
+    {1, 1, 5, 2, 3, 7},
+    {1, 2, 5, 2, 2, 1},
+    {1, 2, 1, 1, 1, 2}
 };
 
 //allocating memory and defining the identity matrix to have row operations completed on it for the inversion
@@ -178,8 +178,10 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
             }
         }
 
+        //if the new pivot is not in the right row
         if (col_max_index != i)
         {
+            //swap rows to place the new pivot
             for(k=0; k < size; k++)
             {
                 int temp = 0;
@@ -188,6 +190,7 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
                 matrix[col_max_index][k] = temp;
             }
 
+            //repeat operation on the inverted matrix
             for(k=0; k < size; k++)
             {
                 int temp = 0;
@@ -197,20 +200,24 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
             }
         }
 
+        //the pivot
         scalar = matrix[i][i];
 
+        //can't continue if the pivot somehow becomes 0. a non-invertible matrix
         if(scalar == 0)
         {
             printf("divide by zero error\n\n");
             return;
         }
 
+        //scale the row to get the pivot to 1, repeat operation on the result matrix
         for(j = 0; j<size; j++)
         {
             matrix[i][j] = matrix[i][j]/scalar;
             inverted_matrix[i][j] = inverted_matrix[i][j]/scalar;
         }
 
+        //stepping through the rows after the pivot, subtract the scaled pivot row from the remaining rows
         for(k = 0; k < size; k++)
         {
             scalar = matrix[k][i];
@@ -222,6 +229,8 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
                 } 
             } 
         }
+
+        //repeat for remaining rows
     }
 }
 
@@ -229,6 +238,7 @@ void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size)
 {
     int i, j;
 
+    //step through each element and print to terminal
     for(i = 0; i < matrix_size; i++)
     {
         for(j = 0; j < matrix_size; j++)
@@ -245,6 +255,7 @@ int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], in
     int max = 0; 
     int i, j, scale_factor;
 
+    //find the maximum element in the matrix
     for(i = 0; i < matrix_size; i++)
     {
         for(j = 0; j < matrix_size; j++)
@@ -256,8 +267,10 @@ int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], in
         }
     }
 
+    //the scale factor becomes 2^24 / the max element in order to maximize precision
     scale_factor = MAX_SCALE / max;
 
+    //scale the result matrix
     for(i = 0; i < matrix_size; i++)
     {
         for(j = 0; j < matrix_size; j++)
@@ -275,6 +288,7 @@ int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size)
 
     norm = 0;
 
+    //estimate the norm of the matrix by finding the maximum absolute row sum
     for(i=0; i < matrix_size; i++)
     {
         int temp_max = 0;
@@ -297,6 +311,7 @@ int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size)
     }
 
 
+    //create a new matrix, but perturb each element by 50
     int perturbed_matrix[MATRIX_SIZE][MATRIX_SIZE];
     for(i = 0; i < matrix_size; i++)
     {
@@ -308,6 +323,7 @@ int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size)
 
     perturbed_norm = 0;
 
+    //repeat estimation of norm, but with perturbed matrix
     for(i=0; i < matrix_size; i++)
     {
         int temp_max = 0;
@@ -329,6 +345,8 @@ int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size)
         }
     }
 
+    //125 was mentioned above as the perturbed norm ratio of the "answer vector". following the basic formula for the condition number,
+    //      that ratio is divided by the ratio of the perturbed matrix norm to the first matrix norm to estimate the condition number
     condition_number = 125 / (perturbed_norm/norm);
 
     return condition_number;
