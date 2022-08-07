@@ -4,7 +4,7 @@
 //defining the matrix size and the max scale factor of 2^24 as provided by the instructor
 #define MATRIX_SIZE 6
 #define MAX_SCALE 16777216  // 2^24    
-#define CLOCKS_PER_SECOND 400000000
+
     
 
 //the well-conditioned matrix to be inverted
@@ -89,7 +89,7 @@ int ill_conditioned_inversion_result[MATRIX_SIZE][MATRIX_SIZE] =
 void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE] , int size, int scale_factor);
 
 //a utility function to print the matrix to the terminal
-inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size);
+void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size);
 
 //used to calculate scale factors and scale up the result matrix for greater precision.
 int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], int matrix_size);
@@ -161,9 +161,9 @@ int main(void)
     clock_t end = clock();
     printf("End: %d\n", end);
 
-    int Clock_Num = (end-start);
+    double Clock_Num = ((double)(end-start)/CLOCKS_PER_SEC)*400000000;
 
-    printf("Clock ticks: %d\n", Clock_Num);
+    printf("Clock ticks: %f\n", Clock_Num);
     return 0;
 }
 
