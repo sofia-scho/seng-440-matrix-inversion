@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <time.h>
 
-//defining the matrix size and the max scale factor of 2^24 as provided by the instructor
-#define MATRIX_SIZE 6
-#define MAX_SCALE 16777216  // 2^24    
+//define the max scale factor of 2^24 as provided by the instructor
+
 
     
 
 //the well-conditioned matrix to be inverted
-int well_conditioned_matrix[MATRIX_SIZE][MATRIX_SIZE] = 
+int well_conditioned_matrix[6][6] = 
 {
     {1, 2, 1, 1, 2, 1},
     {5, 2, 7, 1, 1, 3},
@@ -19,7 +18,7 @@ int well_conditioned_matrix[MATRIX_SIZE][MATRIX_SIZE] =
 };
 
 //allocating memory and defining the identity matrix to have row operations completed on it for the inversion
-int well_conditioned_inversion_result[MATRIX_SIZE][MATRIX_SIZE] = 
+int well_conditioned_inversion_result[6][6] = 
 {
     {1, 0, 0, 0, 0, 0},
     {0, 1, 0, 0, 0, 0},
@@ -30,7 +29,7 @@ int well_conditioned_inversion_result[MATRIX_SIZE][MATRIX_SIZE] =
 };
 
 //the ill-conditioned matrix to be inverted
-int ill_conditioned_matrix[MATRIX_SIZE][MATRIX_SIZE] = 
+int ill_conditioned_matrix[6][6] = 
 {
     {1, 2, 1, 1, 2, 1},
     {5, 33, 7, 1, 1, 3},
@@ -41,7 +40,7 @@ int ill_conditioned_matrix[MATRIX_SIZE][MATRIX_SIZE] =
 };
 
 //creating another matrix for the ill-conditioned result
-int ill_conditioned_inversion_result[MATRIX_SIZE][MATRIX_SIZE] = 
+int ill_conditioned_inversion_result[6][6] = 
 {
     {1, 0, 0, 0, 0, 0},
     {0, 1, 0, 0, 0, 0},
@@ -86,16 +85,16 @@ int ill_conditioned_inversion_result[MATRIX_SIZE][MATRIX_SIZE] =
 
 //the inversion function. takes a pointer to the matrix to be inverted and the identity matrix, 
 //      as well as the size of the matrix and the scale factor
-void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE] , int size, int scale_factor);
+void invert_matrix(int (*matrix)[6], int (*inverted_matrix)[6] , int size, int scale_factor);
 
 //a utility function to print the matrix to the terminal
-inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size);
+inline void print_matrix(int (*matrix)[6], int matrix_size);
 
 //used to calculate scale factors and scale up the result matrix for greater precision.
-int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], int matrix_size);
+int scale_up(int (*matrix)[6], int (*inverted_matrix)[6], int matrix_size);
 
 //function to estimate the condition number of the matrix
-int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size);
+int calculate_condition_number(int (*matrix)[6], int matrix_size);
 
 
 
@@ -109,11 +108,11 @@ int main(void)
 
 
     printf("ill-conditioned matrix:\n\n");
-    print_matrix(ill_conditioned_matrix, MATRIX_SIZE);
+    print_matrix(ill_conditioned_matrix, 6);
 
     //calculate scale factor and condition number of the ill-conditioned matrix
-    scale_factor = scale_up(ill_conditioned_matrix, ill_conditioned_inversion_result, MATRIX_SIZE);
-    condition_number = calculate_condition_number(ill_conditioned_matrix, MATRIX_SIZE);
+    scale_factor = scale_up(ill_conditioned_matrix, ill_conditioned_inversion_result, 6);
+    condition_number = calculate_condition_number(ill_conditioned_matrix, 6);
 
     //emit warning if the condition number is over 10
     if(condition_number > 10)
@@ -126,10 +125,10 @@ int main(void)
     }
 
     //invert the matrix and place the result in the inversion_result matrix
-    invert_matrix(ill_conditioned_matrix, ill_conditioned_inversion_result, MATRIX_SIZE, scale_factor);
+    invert_matrix(ill_conditioned_matrix, ill_conditioned_inversion_result, 6, scale_factor);
 
     //print scaled results and scale factor
-    print_matrix(ill_conditioned_inversion_result, MATRIX_SIZE);
+    print_matrix(ill_conditioned_inversion_result, 6);
     printf("scale factor: %d\n\n", scale_factor);
 
 
@@ -138,10 +137,10 @@ int main(void)
 
     //repeat above steps for well-conditioned matrix
     printf("well-conditioned matrix:\n\n");
-    print_matrix(well_conditioned_matrix, MATRIX_SIZE);
+    print_matrix(well_conditioned_matrix, 6);
 
-    scale_factor = scale_up(well_conditioned_matrix, well_conditioned_inversion_result, MATRIX_SIZE);
-    condition_number = calculate_condition_number(well_conditioned_matrix, MATRIX_SIZE);
+    scale_factor = scale_up(well_conditioned_matrix, well_conditioned_inversion_result, 6);
+    condition_number = calculate_condition_number(well_conditioned_matrix, 6);
 
     if(condition_number > 10)
     {
@@ -152,9 +151,9 @@ int main(void)
         printf("condition_number: %d\n\n", condition_number);
     }
 
-    invert_matrix(well_conditioned_matrix, well_conditioned_inversion_result, MATRIX_SIZE, scale_factor);
+    invert_matrix(well_conditioned_matrix, well_conditioned_inversion_result, 6, scale_factor);
 
-    print_matrix(well_conditioned_inversion_result, MATRIX_SIZE);
+    print_matrix(well_conditioned_inversion_result, 6);
     printf("scale factor: %d\n\n", scale_factor);
     
     //end of program: stop clock
@@ -168,7 +167,7 @@ int main(void)
 }
 
 
-void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE] , int size, int scale_factor)
+void invert_matrix(int (*matrix)[6], int (*inverted_matrix)[6] , int size, int scale_factor)
 {
     //indices and temporary variables for pivoting
     register int i, j, k, col_max_index;
@@ -258,7 +257,7 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
     }
 }
 
-inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size)
+inline void print_matrix(int (*matrix)[6], int matrix_size)
 {
     register int i, j;
 
@@ -274,7 +273,7 @@ inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size)
     printf("\n");
 }
 
-int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], int matrix_size)
+int scale_up(int (*matrix)[6], int (*inverted_matrix)[6], int matrix_size)
 {
     int max = 0; 
     register int i, j;
@@ -293,7 +292,7 @@ int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], in
     }
 
     //the scale factor becomes 2^24 / the max element in order to maximize precision
-    scale_factor = MAX_SCALE/max;
+    scale_factor = 16777216/max;
 
     //scale the result matrix
     for(i = 0; i < matrix_size; i++)
@@ -307,7 +306,7 @@ int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], in
     return scale_factor;
 }
 
-int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size)
+int calculate_condition_number(int (*matrix)[6], int matrix_size)
 {
     int condition_number, norm, perturbed_norm;
     register int i, j;
@@ -338,7 +337,7 @@ int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size)
 
 
     //create a new matrix, but perturb each element by 50
-    int perturbed_matrix[MATRIX_SIZE][MATRIX_SIZE];
+    int perturbed_matrix[6][6];
     for(i = 0; i < matrix_size; i++)
     {
         for(j = 0; j < matrix_size; j++)
