@@ -6,4 +6,4 @@ This is our final project for optimizing Gauss-Jordan matrix inversion using opt
 
 ## Setup
 
-''' { ssh <netlink>@seng440.ece.uvic.ca } ''' 
+``` { ssh <netlink>@seng440.ece.uvic.ca } ```
