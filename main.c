@@ -158,9 +158,8 @@ int main(void)
 void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE] , int size, int scale_factor)
 {
     //indices and temporary variables for pivoting
-    register int i, j, k;
-    int scalar;
-    int col_max, col_max_index;
+    register int i, j, k, col_max_index;
+    int scalar, col_max, temp_one, temp_two;
 
     for(i = 0; i<size; i++)
     {
@@ -183,21 +182,27 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
         if (col_max_index != i)
         {
             //swap rows to place the new pivot
-            for(k=0; k < size; k++)
+            for(k=0; k < size; k+=2)
             {
-                int temp = 0;
-                temp = matrix[i][k];
+                temp_one = matrix[i][k];
                 matrix[i][k] = matrix[col_max_index][k];
-                matrix[col_max_index][k] = temp;
+                matrix[col_max_index][k] = temp_one;
+
+                temp_two = matrix[i][k+1];
+                matrix[i][k+1] = matrix[col_max_index][k+1];
+                matrix[col_max_index][k+1] = temp_two;
             }
 
             //repeat operation on the inverted matrix
-            for(k=0; k < size; k++)
+            for(k=0; k < size; k+=2)
             {
-                int temp = 0;
-                temp = inverted_matrix[i][k];
-                inverted_matrix[i][k] = inverted_matrix[col_max_index][k];
-                inverted_matrix[col_max_index][k] = temp;
+                temp_one = matrix[i][k];
+                matrix[i][k] = matrix[col_max_index][k];
+                matrix[col_max_index][k] = temp_one;
+
+                temp_two = matrix[i][k+1];
+                matrix[i][k+1] = matrix[col_max_index][k+1];
+                matrix[col_max_index][k+1] = temp_two;
             }
         }
 
@@ -205,17 +210,20 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
         scalar = matrix[i][i];
 
         //can't continue if the pivot somehow becomes 0. a non-invertible matrix
-        if(scalar == 0)
+        if (scalar == 0)
         {
             printf("divide by zero error\n\n");
             return;
         }
 
         //scale the row to get the pivot to 1, repeat operation on the result matrix
-        for(j = 0; j<size; j++)
+        for(j = 0; j<size; j+=2)
         {
             matrix[i][j] = matrix[i][j]/scalar;
             inverted_matrix[i][j] = inverted_matrix[i][j]/scalar;
+
+            matrix[i][j+1] = matrix[i][j+1]/scalar;
+            inverted_matrix[i][j+1] = inverted_matrix[i][j+1]/scalar;
         }
 
         //stepping through the rows after the pivot, subtract the scaled pivot row from the remaining rows
@@ -223,10 +231,13 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
         {
             scalar = matrix[k][i];
             if(k!=i){
-                for(j = 0; j<size; j++)
+                for(j = 0; j<size; j+=2)
                 {
                     matrix[k][j] -= matrix[i][j]*scalar;
                     inverted_matrix[k][j] -= inverted_matrix[i][j]*scalar;
+
+                    matrix[k][j+1] -= matrix[i][j+1]*scalar;
+                    inverted_matrix[k][j+1] -= inverted_matrix[i][j+1]*scalar;
                 } 
             } 
         }
