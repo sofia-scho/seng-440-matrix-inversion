@@ -89,7 +89,7 @@ int ill_conditioned_inversion_result[MATRIX_SIZE][MATRIX_SIZE] =
 void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE] , int size, int scale_factor);
 
 //a utility function to print the matrix to the terminal
-void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size);
+inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size);
 
 //used to calculate scale factors and scale up the result matrix for greater precision.
 int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], int matrix_size);
