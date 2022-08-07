@@ -158,7 +158,8 @@ int main(void)
 void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE] , int size, int scale_factor)
 {
     //indices and temporary variables for pivoting
-    int i, j, k, scalar;
+    register int i, j, k;
+    int scalar;
     int col_max, col_max_index;
 
     for(i = 0; i<size; i++)
@@ -236,7 +237,7 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
 
 inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size)
 {
-    int i, j;
+    register int i, j;
 
     //step through each element and print to terminal
     for(i = 0; i < matrix_size; i++)
@@ -253,7 +254,8 @@ inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size)
 int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], int matrix_size)
 {
     int max = 0; 
-    int i, j, scale_factor;
+    register int i, j;
+    int scale_factor;
 
     //find the maximum element in the matrix
     for(i = 0; i < matrix_size; i++)
@@ -284,7 +286,8 @@ int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], in
 
 int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size)
 {
-    int condition_number, norm, perturbed_norm, i, j;
+    int condition_number, norm, perturbed_norm;
+    register int i, j;
 
     norm = 0;
 
