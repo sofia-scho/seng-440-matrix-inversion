@@ -102,12 +102,10 @@ int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size);
 int main(void)
 {
     int scale_factor, condition_number;
-    double total_t;
-
-    clock_t start_t, end_t;
 
     //start of program: start clock
-    start_t = clock();
+    clock_t start = clock();
+    printf("Start: %d\n", start);
 
 
     printf("ill-conditioned matrix:\n\n");
@@ -160,10 +158,12 @@ int main(void)
     printf("scale factor: %d\n\n", scale_factor);
     
     //end of program: stop clock
-    end_t = clock();
+    clock_t end = clock();
+    printf("End: %d\n", end);
 
-    total_t = (double)(end_t-start_t)/CLOCKS_PER_SECOND;
-    printf("Time taken by CPU: %f\n", total_t);
+    int Clock_Num = (end-start);
+
+    printf("Clock ticks: %d\n", Clock_Num);
     return 0;
 }
 
