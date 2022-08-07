@@ -234,7 +234,7 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
     }
 }
 
-void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size)
+inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size)
 {
     int i, j;
 
