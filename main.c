@@ -89,7 +89,7 @@ int ill_conditioned_inversion_result[MATRIX_SIZE][MATRIX_SIZE] =
 void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE] , int size, int scale_factor);
 
 //a utility function to print the matrix to the terminal
-void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size);
+inline void print_matrix(int (*matrix)[MATRIX_SIZE], int matrix_size);
 
 //used to calculate scale factors and scale up the result matrix for greater precision.
 int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], int matrix_size);
@@ -172,7 +172,7 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
 {
     //indices and temporary variables for pivoting
     register int i, j, k, col_max_index;
-    int scalar, col_max, temp_one, temp_two;
+    int scalar, col_max, temp_one, temp_two, temp_three, temp_four;
 
     for(i = 0; i<size; i++)
     {
@@ -204,18 +204,17 @@ void invert_matrix(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZ
                 temp_two = matrix[i][k+1];
                 matrix[i][k+1] = matrix[col_max_index][k+1];
                 matrix[col_max_index][k+1] = temp_two;
-            }
+            
 
             //repeat operation on the inverted matrix
-            for(k=0; k < size; k+=2)
-            {
-                temp_one = matrix[i][k];
-                matrix[i][k] = matrix[col_max_index][k];
-                matrix[col_max_index][k] = temp_one;
 
-                temp_two = matrix[i][k+1];
-                matrix[i][k+1] = matrix[col_max_index][k+1];
-                matrix[col_max_index][k+1] = temp_two;
+                temp_three = matrix[i][k];
+                inverted_matrix[i][k] = matrix[col_max_index][k];
+                inverted_matrix[col_max_index][k] = temp_three;
+
+                temp_four = matrix[i][k+1];
+                inverted_matrix[i][k+1] = matrix[col_max_index][k+1];
+                inverted_matrix[col_max_index][k+1] = temp_four;
             }
         }
 
