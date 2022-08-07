@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <time.h>
 
 //defining the matrix size and the max scale factor of 2^24 as provided by the instructor
 #define MATRIX_SIZE 6
 #define MAX_SCALE 16777216  // 2^24    
+#define CLOCKS_PER_SECOND 400000000
     
 
 //the well-conditioned matrix to be inverted
@@ -100,6 +102,12 @@ int calculate_condition_number(int (*matrix)[MATRIX_SIZE], int matrix_size);
 int main(void)
 {
     int scale_factor, condition_number;
+    double total_t;
+
+    clock_t start_t, end_t;
+
+    //start of program: start clock
+    start_t = clock();
 
 
     printf("ill-conditioned matrix:\n\n");
@@ -151,6 +159,11 @@ int main(void)
     print_matrix(well_conditioned_inversion_result, MATRIX_SIZE);
     printf("scale factor: %d\n\n", scale_factor);
     
+    //end of program: stop clock
+    end_t = clock();
+
+    total_t = (double)(end_t-start_t)/CLOCKS_PER_SECOND;
+    printf("Time taken by CPU: %f\n", total_t);
     return 0;
 }
 
@@ -281,7 +294,7 @@ int scale_up(int (*matrix)[MATRIX_SIZE], int (*inverted_matrix)[MATRIX_SIZE], in
     }
 
     //the scale factor becomes 2^24 / the max element in order to maximize precision
-    scale_factor = MAX_SCALE / max;
+    scale_factor = MAX_SCALE/max;
 
     //scale the result matrix
     for(i = 0; i < matrix_size; i++)
