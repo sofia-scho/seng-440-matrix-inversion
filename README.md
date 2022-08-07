@@ -24,7 +24,7 @@ This is our final project for optimizing Gauss-Jordan matrix inversion using opt
 
 ``` telnet arm ```
 
-Login with username ``` user1 `` and the password provided by professor.
+Login with username "user1" and the password provided by professor.
 
 ``` ./main ```
 
