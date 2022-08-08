@@ -46,6 +46,10 @@ Our global variables are:
  **MATRIX_SIZE** and **MAX_SCALE**
 
  In the optimized version these global variables were replaced with the value itself (integers) to avoid going to memory.
+ 
+## Barr-C
+
+We followed Barr-C standards for our program. Some specific examples of this are: naming convention for variables (snakecase), spacing rules like whitespace between changes in functionality and tabs for blocks within loops, and commenting rules (all comments are preceeded by "//") and there is thorough commenting throughout the program.
 
 
 
